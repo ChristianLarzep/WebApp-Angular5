@@ -1,0 +1,21 @@
+<div *ngIf="!producto">
+  <p>Cargando producto...</p>
+</div>
+<div class="row" *ngIf="producto">
+  <div *ngIf="producto.imagen" class="col-lg-4">
+    <div class="imagen_container" *ngIf="producto.imagen">
+      <br>
+      <img src="http://localhost:8080/Angular5/prototipoAPIREST/uploads/{{producto.imagen}}" class="producto_imagen" style="width: 100%;"/>
+    </div>
+  </div>
+  <div *ngIf="!producto.imagen" class="col-lg-4">
+    <br>
+    <div class="imagen_relleno"></div>
+  </div>
+  <div class="col-lg-8">
+    <br>
+    <h3>{{producto.nombre}}</h3>
+    <p><strong>{{producto.precio}}</strong></p>
+    <p>{{producto.descripcion}}</p>
+  </div>
+</div>

@@ -1,0 +1,1074 @@
+Crear proyecto
+ng new Angular5-webapp
+
+ng start Para levantar servidor
+
+ Decargar Bootstrap y ponerlo en la carpeta src/assets
+ Descargar JQuery https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
+ Ponerlo en la misma carpeta.
+
+ Los agregamos en el archivo index.html
+
+ <!-- jQuery -->
+ <script type="text/javascript" src="assets/jquery.min.js"></script>
+
+ <!-- Bootstrap -->
+ <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+ <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
+ Tuve que dascargar los archivos css y js de Bootstrap ppr separado, la carpeta de Bootstrap no los contenia
+ https://getbootstrap.com/docs/4.0/getting-started/download/
+ O en:
+ https://v4-alpha.getbootstrap.com/getting-started/download/
+
+----------------------------Primeros Estilos
+Dentro de src/app/app.component.html remplazamos todo por:
+
+<!--The content below is only a placeholder and can be replaced.-->
+<div id="content" class="col-lg-10 offset-1"><!--Cada div se divide en 12 columnas, col-lg-10 indica que solo se usaran 10 columnas | offset-1 indica que fuera del dive habra una columna de espacio-->
+   <header id="header">
+      <h1>
+        {{title}}
+      </h1>
+   </header>
+    <nav id="nav" class="col-lg-12">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Productos</a></li>
+          <li><a href="#">Crear producto</a></li>
+        </ul>
+    </nav>
+
+    <section id="main" class="col-lg-12">
+         <h3>Texto principal</h3>
+    </section>
+    <footer id="footer" class="col-lg-12">
+       <p>Angular 5</p>
+    </footer>
+</div>
+
+En src/assets/ creamos styles.class
+Lo agregamos en index.html
+<!-- Estilos -->
+<link rel="stylesheet" href="assets/styles.css" />
+
+Dentro de styles.css agregamos:
+#content{
+  margin-top:30px;
+  border-radius: 2px;
+  background: white;
+  box-shadow: 0px 2px 5px #ccc;
+  padding: 0px;
+  overflow: hidden; /*Espacio debajo del texto en footer*/
+}
+
+#header{
+  background: #E03137;
+  color: white;
+  margin:0px;
+  height: 90px;
+}
+
+#header h1{
+  display:block; /*  ???  */
+  line-height: 90px; /*pixeles top*/
+  font-weight: bold;
+  font-size: 30px;
+  margin-left: 15px;
+}
+#nav{
+  padding:0px;
+  margin: 0px;
+  background: rgba(224,49,55,0.67);
+  overflow: hidden; /*Evita que el float:left deshabilite el background*/
+}
+#nav ul{
+   margin: 0px;
+   list-style: none;
+   padding-left: 20px;
+}
+
+#nav ul li{
+  float:left;
+  margin-right:20px;
+}
+#nav ul li a{
+  display:block;
+  line-height:29px;
+  color:black;
+  height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  transition: all 300ms;
+}
+#nav ul li a:hover{
+  text-decoration: none;
+  background: #E03137;
+}
+#footer{
+  margin-top:50px;
+  padding-top:10px;
+  border-top:1px solid #eee;
+  color:gray;
+}
+
+----------------Componente Home------
+Creamos una carpeta llamada components y otra llamada views dentro de src/app
+Creamos un archivo home.component.ts para la carpeta ComponentesCreamos un archivo home.compinents.html para views
+Dentro de al archivo ts agregamos:
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'home',
+  templateUrl: '../views/home.component.html'
+})
+export class HomeComponent{
+  public titulo:string;
+
+  constructor(){
+    this.titulo = "Pagina principal";
+  }
+
+  ngOnInit(){
+    console.log('Se ha cargado Home');
+  }
+}
+
+Y dentro del archivo .html agregamos:
+
+<div class="col-lg-10 offset-1">
+  <div class="jumbotron">
+    <h2>{{titulo}}</h2>
+    <p>Gestiona tus productos</p>
+    <p>
+     <a href="#" class="btn btn-lg btn-primary">Ver Producto</a>
+     <a href="#" class="btn btn-lg btn-success">Añadir producto</a>
+    </p>
+  </div>
+
+</div>
+
+Dentro del archivo src/app/app.module.ts agregamos:
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+//Componentes
+import { AppComponent } from './app.component';
+import { HomeComponent } from './components/home.component'; // <---------
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent  // <-------------------
+  ],
+  imports: [
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+En el archivo src/assets/styles.css agregamos
+
+#main .jumbotron{
+  padding: 50px;
+  margin-top: 30px;
+  border-radius: 5px;
+}
+
+----------------Routing y componente Error--------------------------
+Creamos error.component.ts en la carpeta components y agregamos:
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'error',
+  templateUrl: '../views/error.html'
+})
+export class ErrorComponent{
+  public titulo:string;
+
+  constructor(){
+    this.titulo = "Error!! Pagina no encontrada."
+  }
+  ngOnInit(){
+    console.log("Componente error.");
+  }
+}
+
+Creamos error.html en la carpeta views y agregamos:
+
+<div class="col-lg-10 offset-1">
+  <div class="jumbotron">
+    <h2>{{titulo}}</h2>
+    <p>No existe la pagina</p>
+    <p>
+     <a href="#" class="btn btn-lg btn-primary">Ver Producto</a>
+     <a href="#" class="btn btn-lg btn-success">Añadir producto</a>
+    </p>
+</div>
+
+Creamos un archivo dentro de src/app/ llamado app.routing.ts y gregamos:
+
+import { ModuleWithProviders } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+//Componentes
+import { HomeComponent } from './components/home.component';
+import { ErrorComponent } from './components/error.component';
+
+const appRoutes : Routes = [
+  {path: '', component: HomeComponent},
+  {path: 'home', component: HomeComponent},
+  {path: '**', component: ErrorComponent}
+];
+
+export const appRoutingProviders: any[] = []; //Array de tipo cualquiera
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes); //Se llama al objeto RouterModule, a su metodo forRoot y le pasamos el array de rutas para que las utilice
+//Estos dos son los que se importaran en app.module.ts para que el servicio de routing funcione
+
+Dentro de src/app/app.module.ts agregamos:
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+//Componentes
+import { AppComponent } from './app.component';
+import { HomeComponent } from './components/home.component';
+import { ErrorComponent } from './components/error.component'; // <---------------
+
+//rutas
+import { routing, appRoutingProviders } from './app.routing';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    ErrorComponent  // <-----------------
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,  //<-------------------
+    routing      //<-------------------
+  ],
+  providers: [
+    appRoutingProviders // <--------------------------
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+Dentro del archivo src/app/app.component.html sustituimos la etiqueta <home></home> por  <router-outlet></router-outlet>
+Y sustituimos el href="#" en las etiquetas <a> por [routerLink]="['/home']"  [routerLinkActive]="['activado']" para trabajar con las rutas
+
+En style.css agregamos:
+
+.activado{
+  text-decoration: none !important;
+  border-bottom: 4px solid gray !important;
+}
+------------------------Seccion Productos--------------------------------
+
+Creamos productos.component.ts en src/app/Componentes y agragamos:
+
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+@Component({
+  selector: 'productos',
+  templateUrl: '../views/productos.html'
+})
+
+export class ProductosComponent{
+  public titulo:string;
+
+  constructor(
+    private _route: ActivatedRoute,
+    private _router: Router
+  ){
+    this.titulo = "Listado de productos";
+  }
+
+  ngOnInit(){
+    console.log('productos.ts cargado');
+  }
+}
+
+Creamos productos.html en src/app/views y agregamos:
+
+<p>{{titulo}}</p>
+
+Dentro de app.modules.ts agregamos:
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+//Componentes
+import { AppComponent } from './app.component';
+import { HomeComponent } from './components/home.component';
+import { ErrorComponent } from './components/error.component';
+import { ProductosComponent } from './components/productos.component'; //<---------------
+
+//rutas
+import { routing, appRoutingProviders } from './app.routing';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    ErrorComponent,
+    ProductosComponent //<-------------------
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    routing
+  ],
+  providers: [
+    appRoutingProviders
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+Dentro de app.routing.ts agregamos:
+import { ModuleWithProviders } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+//Componentes
+import { HomeComponent } from './components/home.component';
+import { ErrorComponent } from './components/error.component';
+import { ProductosComponent } from './components/productos.component';  //<---------------------
+
+const appRoutes : Routes = [
+  {path: '', component: HomeComponent},
+  {path: 'home', component: HomeComponent},
+  {path: 'productos', component: ProductosComponent},  //<------------------
+  {path: '**', component: ErrorComponent}
+];
+
+export const appRoutingProviders: any[] = []; //Array de tipo cualquiera
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes); //Se llama al objeto RouterModule, a su metodo forRoot y le pasamos el array de rutas para que las utilice
+//Estos dos son los que se importaran en app.module.ts para que el servicio de routing funcione
+
+En app.component.html sustituimos href="#" por [routerLink]="['/productos']"  [routerLinkActive]="['activado']"
+
+------------------Servicio para productos con API REST-----------------------------
+
+Creamos una carpeta llamada services dentro de src/app y dentro de esta creamos un archivo llamado "global.ts", y agregamos:
+
+export var GLOBAL = {
+  url: 'http://localhost:8080/Angular5/prototipo_API_REST/index.php/',  // ruta donde se encuentra la API REST creada
+};
+
+Creamos otro archivo en esa carpeta, llamdo "producto.service.ts" y agregamos:
+
+import { Injectable } from '@angular/core';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
+import { Producto } from '../models/producto';
+import { GLOBAL } from './global';
+
+@Injectable()
+export class ProductoService{
+  public url:string;
+
+  constructor(
+    public _http: Http
+  ){
+    this.url = GLOBAL.url;
+  }
+
+  getProductos(){
+    return this._http.get(this.url+'productos').map(res => res.json()); //Peticion AJAX
+  }
+}
+
+Creamos una carpeta dentro de src/app llamada "models" y dentro de esta creamos un archivo llamado "producto.ts" y agregamos:
+
+export class Producto{
+  constructor(
+    public id:number,
+    public nombre:string,
+    public descripcion:string,
+    public precio:number,
+    public imagen:string
+  ){}
+}
+
+En src/app/components/productos.component.ts agregamos:
+
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ProductoService } from '../services/producto.service'; //<-------------------
+import { Producto } from '../models/producto';//<-------------------
+
+@Component({
+  selector: 'productos',
+  templateUrl: '../views/productos.html',
+  providers: [ProductoService] //<------------
+})
+
+export class ProductosComponent{
+  public titulo:string;
+  public productos: Producto[];  //<--------------
+
+  constructor(
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _productoService: ProductoService  //<-----------
+  ){
+    this.titulo = "Listado de productos";
+  }
+
+  ngOnInit(){ //<--------------------
+    console.log('productos.ts cargado');
+    this._productoService.getProductos().subscribe(
+      result => {
+          if(result.code != 200){
+              console.log(result);
+          }else{
+              this.productos = result.data;
+          }
+      },
+      error => {
+         console.log(<any>error);
+      }
+    );
+  }
+}
+
+En src/app/views/productos.html agregamos:
+
+<p>{{titulo}}</p>
+<hr/>
+<div *ngIf="!productos">
+    Cargando lista de productos...
+</div>
+<div *ngIf="productos">
+    <ul>
+      <li *ngFor="let producto of productos">
+         <strong>{{producto.nombre}}</strong>
+         <p>{{producto.precio}}</p>
+      </li>
+    </ul>
+</div>
+
+
+-------------------------Seccion Crear productos--------------------------
+En src/app/components creamos producto-add.component.ts
+En src/app/views creamos producto-add.HttpModule
+
+En src/app/services/producto.service.ts agregamos:
+
+import { Injectable } from '@angular/core';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
+import { Producto } from '../models/producto';
+import { GLOBAL } from './global';
+
+@Injectable()
+export class ProductoService{
+  public url:string;
+
+  constructor(
+    public _http: Http
+  ){
+    this.url = GLOBAL.url;
+  }
+
+  getProductos(){ //<---------------------------
+    return this._http.get(this.url+'productos').map(res => res.json()); //Peticion AJAX
+  }//<------------------------
+  addProducto(producto:Producto){
+    let json = JSON.stringify(producto); //convertirlo a Json
+    let params = 'json='+json;
+    let headers = new Headers({'Content-Type':'application/x-www-form-urlencoded'});
+
+    return this._http.post(this.url+'productos',params,{headers: headers})
+                          .map(res => res.json());
+  }
+
+}
+
+En producto-add.component.ts agregamos:
+
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+
+import { ProductoService } from '../services/producto.service';
+import { Producto } from '../models/producto';
+
+@Component({
+   selector: 'producto-add',
+   templateUrl: '../views/producto-add.html',
+   providers: [ ProductoService ]
+})
+export class ProductoAddComponent{
+   public titulo:string;
+   public producto: Producto;
+
+   constructor(
+     private _productoService:ProductoService,
+     private _route: ActivatedRoute,
+     private _router:Router
+   ){
+     this.titulo = 'Crear nuevo producto';
+     this.producto = new Producto(0,'','',0,'');
+   }
+
+   onSubmit(){
+     console.log(this.producto);
+
+     this._productoService.addProducto(this.producto).subscribe(
+       response => {
+         if(response.code == 200){
+           this._router.navigate(['/productos']);
+         }else{
+           console.log(response);
+         }
+       },
+       error => {
+         console.log(<any>error);
+       }
+     );
+   }
+
+   ngOnInit(){
+     console.log('producto-add.component.ts cargado...');
+   }
+}
+
+En producto-add.html agregamos:
+
+<h3>{{titulo}}</h3>
+
+<form #formProducto="ngForm" (ngSubmit)="onSubmit()" class="col-lg-6" id="form-producto">
+  <label>
+    Nombre
+    <span *ngIf="!nombre.valid && nombre.touched" class="badge badge-danger">El nombre es obligatorio</span>
+  </label>
+  <input type="text" #nombre="ngModel" name= "nombre" [(ngModel)]="producto.nombre" class="form-control" required/>
+
+  <label>
+    Descripcion
+    <span *ngIf="!descripcion.valid && descripcion.touched" class="badge badge-danger">La descripcion es obligatoria</span>
+  </label>
+  <textarea  #descripcion="ngModel" name="descripcion" [(ngModel)]="producto.descripcion"class="form-control"mrequired></textarea>
+
+  <label>
+    Precio
+    <span *ngIf="!precio.valid && precio.touched" class="badge badge-danger">El precio no es correcto</span>
+  </label>
+  <input type="text"  #precio="ngModel" name= "precio" [(ngModel)]="producto.precio" class="form-control" required pattern="[0-9]+"/>
+
+  <label>Imagen</label>
+  <input type="file" class="form-control"/>
+  <br/>
+  <input type="submit" value="{{titulo}}" [disabled]="!formProducto.form.valid" class="btn btn-success">
+</form>
+
+En src/app/assets/styles.css agregamos:
+
+#form-producto{
+  margin-top: 10px;
+}
+
+En src/app/app.module.ts agregamos:
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+//Componentes
+import { AppComponent } from './app.component';
+import { HomeComponent } from './components/home.component';
+import { ErrorComponent } from './components/error.component';
+import { ProductosComponent } from './components/productos.component';
+import { ProductoAddComponent } from './components/producto-add.component'; //<-------------
+
+//rutas
+import { routing, appRoutingProviders } from './app.routing';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    ErrorComponent,
+    ProductosComponent,
+    ProductoAddComponent   //<---------------
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    routing
+  ],
+  providers: [
+    appRoutingProviders
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+En src/app/app.ruting.ts agregamos:
+
+import { ModuleWithProviders } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+//Componentes
+import { HomeComponent } from './components/home.component';
+import { ErrorComponent } from './components/error.component';
+import { ProductosComponent } from './components/productos.component';
+import { ProductoAddComponent } from './components/producto-add.component'; //<-------------
+
+const appRoutes : Routes = [
+  {path: '', component: HomeComponent},
+  {path: 'home', component: HomeComponent},
+  {path: 'productos', component: ProductosComponent},
+  {path: 'crear-producto', component: ProductoAddComponent},  //<-----------------
+  {path: '**', component: ErrorComponent}
+];
+
+export const appRoutingProviders: any[] = []; //Array de tipo cualquiera
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes); //Se llama al objeto RouterModule, a su metodo forRoot y le pasamos el array de rutas para que las utilice
+//Estos dos son los que se importaran en app.module.ts para que el servicio de routing funcione
+
+
+En src/app/app.component.html sustituimos el href="#" en al <li> de Crear producto por:
+[routerLink]="['/crear-producto']" [routerLinkActive]="['activado']"
+
+
+---------------------Agregar Imagen ------------------------------------
+Se actualizo piramide-upload de la API REST
+En src/app/services/producto.service.ts agregamos:
+
+makeFileRequest(url: string, params: Array<string>, files:Array<File>){
+  return new Promise((resolve,reject)=>{
+    var formData: any = new FormData();
+    var xhr = new XMLHttpRequest();  //Peticion AJAX
+
+    for(var i = 0; i < files.length; i++){  //Recorre el array de imagenes
+      formData.append('uploads[]',files[i],files[i].name);
+    }
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState == 4){
+        if(xhr.status == 200){
+          resolve(JSON.parse(xhr.response));
+        }else{
+          reject(xhr.response);
+        }
+      }
+    };
+    xhr.open("POST",url, true);
+    xhr.send(formData);
+  });
+}
+
+En src/app/views/producto-add.html agregamos en el boton de seleccionar imagen la llamada a una funcion que se activara cuando ocurra el evento de seleccionar imagen:
+
+<input type="file" class="form-control" (change)="fileChangeEvent($event)"/>
+
+En src/app/components/producto-add.component.ts agregamos:
+
+import { GLOBAL } from '../services/global';
+
+y agregamos:
+
+onSubmit(){
+  console.log(this.producto);
+  if(this.filesToUpload.length >= 1){
+  this._productoService.makeFileRequest(GLOBAL.url+'upload-file', [], this.filesToUpload).then((result) => {
+    console.log(result);
+    this.producto.imagen = result.filename;
+    this.saveProducto();
+  },(error)=>{
+    console.log(error);
+  });
+}else{
+  this.saveProducto();
+}
+
+}
+
+saveProducto(){
+  this._productoService.addProducto(this.producto).subscribe(
+    response => {
+      if(response.code == 200){
+        this._router.navigate(['/productos']);
+      }else{
+        console.log(response);
+      }
+    },
+    error => {
+      console.log(<any>error);
+    }
+  );
+}
+
+fileChangeEvent(fileInput:any){
+  this.filesToUpload = <Array<File>>fileInput.target.files;
+  console.log(this.filesToUpload);
+}
+
+
+--------------------Mostrar imagen y estilos---------------------
+
+En src/app/views/productos.html agregamos:
+
+<p>{{titulo}}</p>
+<hr/>
+<div *ngIf="!productos">
+    Cargando lista de productos...
+</div>
+<div *ngIf="productos">
+  <div class="row">
+    <div class="col-lg-3" *ngFor="let producto of productos">
+      <div class="img-thumbnail">
+        <div *ngIf="producto.imagen" class="imagen_container">
+          <img src="http://localhost:8080/Angular5/prototipo_API_REST/uploads/{{producto.imagen}}" class="producto_imagen" style="width: 100%;"/>
+        </div>
+        <div *ngIf="!producto.imagen">
+          <div class="imagen_relleno"></div>
+        </div>
+        <div class="caption">
+          <h3>{{producto.nombre}}</h3>
+          <p>{{producto.precio}}</p>
+          <p>
+            <a href="#" class="btn btn-secondary">Ver</a>
+            <a href="#" class="btn btn-warning">Editar</a>
+            <a href="#" class="btn btn-md btn-danger">Borrar</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+En src/assets/styles.css agregamos:
+
+.imagen_container{
+  width: 100%;
+  overflow: hidden;
+}
+.producto_imagen{
+  height: 200px;
+  margin: 0px auto;
+  display: block;
+}
+
+.imagen_relleno{
+  background: #ccc;
+  width: 100%;
+  height: 200px;
+}
+
+
+-------------------------Ver detalles----------------------------
+Creamos un producto-details.component.ts en la carpeta comónentes y producto-details.html en la carpeta views
+Agregamos la ruta correspondiente en src/app/app.routing.ts y agregammos el componente en app.modules.ts
+
+En producto-details.component.ts agregamos:
+
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ProductoService } from '../services/producto.service';
+import { Producto } from '../models/producto';
+
+@Component({
+  selector: 'productos-details',
+  templateUrl: '../views/producto-details.html',
+  providers: [ProductoService]
+})
+export class ProductoDetailComponent{
+  public producto: Producto;
+
+  constructor(
+    private _productoService: ProductoService,
+    private _route: ActivatedRoute,
+    private _router: Router
+  ){}
+
+  ngOnInit(){
+    console.log('prodcuto-details.component.ts cargado...');
+    this.getProducto();
+  }
+
+  getProducto(){
+    this._route.params.forEach((params: Params)=>{
+      let id = params['id'];
+      this._productoService.getProducto(id).subscribe(
+        response => {
+          if(response.code == 200){
+            this.producto = response.data;
+          }else{
+            this._router.navigate(['/productos']);
+          }
+        },
+        error => {
+          console.log(<any>error);
+        }
+      );
+    });
+  }
+}
+
+Y en producto-details.html agregamos:
+
+<div *ngIf="!producto">
+  <p>Cargando producto...</p>
+</div>
+<div class="row" *ngIf="producto">
+  <div *ngIf="producto.imagen" class="col-lg-4">
+    <div class="imagen_container" *ngIf="producto.imagen">
+      <br>
+      <img src="http://localhost:8080/Angular5/prototipo_API_REST/uploads/{{producto.imagen}}" class="producto_imagen" style="width: 100%;"/>
+    </div>
+  </div>
+  <div *ngIf="!producto.imagen" class="col-lg-4">
+    <br>
+    <div class="imagen_relleno"></div>
+  </div>
+  <div class="col-lg-8">
+    <br>
+    <h3>{{producto.nombre}}</h3>
+    <p><strong>{{producto.precio}}</strong></p>
+    <p>{{producto.descripcion}}</p>
+  </div>
+</div>
+
+En src/app/services/producto.service.ts agregamos:
+
+getProducto(id){
+  return this._http.get(this.url+'producto/'+id).map(res => res.json());
+}
+
+En src/app/views/productos.html agregamos [routerLink]="['/producto', producto.id]" en el boton de "Ver"
+
+
+-------------------------------Editar--------------------------------------
+
+Creamos un componente llamado producto-edit.component.ts y agregamos:
+
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ProductoService } from '../services/producto.service';
+import { Producto } from '../models/producto';
+import { GLOBAL } from '../services/global';
+
+@Component({
+  selector: 'producto-edit',
+  templateUrl: '../views/producto-add.html',
+  providers: [ProductoService]
+})
+export class ProductoEditComponent{
+  public titulo:string;
+  public producto: Producto;
+  public filesToUpload;
+  public resultUpload;
+  public is_edit; //Verificar si se trata de una edicion
+
+  constructor(
+    private _productoService: ProductoService,
+    private _route: ActivatedRoute,
+    private _router: Router
+  ){
+    this.titulo = 'Editar producto';
+    this.producto = new Producto(0,'','',1,'');
+    this.is_edit = true;
+  }
+
+  ngOnInit(){
+    console.log('prodcuto-edit.component.ts cargado...');
+    this.getProducto();
+  }
+
+  onSubmit(){
+    console.log(this.producto);
+    if(this.filesToUpload && this.filesToUpload.length >= 1){
+    this._productoService.makeFileRequest(GLOBAL.url+'upload-file', [], this.filesToUpload).then((result) => {
+      console.log(result);
+      if(result.filename){  //???
+      this.producto.imagen = result.filename;
+      this.updateProducto();
+    }
+    },(error)=>{
+      console.log(error);
+    });
+  }else{
+    this.updateProducto();
+  }
+
+}
+
+  updateProducto(){
+    this._route.params.forEach((params: Params)=>{
+      let id = params['id'];
+          this._productoService.editProducto(id, this.producto).subscribe(
+            response => {
+              if(response.code == 200){
+                this._router.navigate(['/producto', id]);
+              }else{
+                console.log(response);
+              }
+            },
+            error => {
+              console.log(<any>error);
+            }
+          );
+        });
+  }
+
+  fileChangeEvent(fileInput:any){
+    this.filesToUpload = <Array<File>>fileInput.target.files;
+    console.log(this.filesToUpload);
+  }
+
+  getProducto(){  //Para llenar la variable producto y mostrarla en la vista
+    this._route.params.forEach((params: Params)=>{
+      let id = params['id'];
+      this._productoService.getProducto(id).subscribe(
+        response => {
+          if(response.code == 200){
+            this.producto = response.data;
+          }else{
+            this._router.navigate(['/productos']);
+          }
+        },
+        error => {
+          console.log(<any>error);
+        }
+      );
+    });
+  }
+}
+
+
+En src/app/views/producto-add.html editamos en campo de imagen:
+
+<label>Imagen</label>
+<div *ngIf="is_edit">
+  <img src="http://localhost:8080/Angular5/prototipo_API_REST/uploads/{{producto.imagen}}" class="producto_imagen" style="width: 60%;"/>
+</div>
+
+Agregammos la ruta editar-producto/:id en src/app/app.routing.ts y agregamos el componente en app.module.ts
+
+En src/app/services/producto.service.ts agregamos:
+
+editProducto(id, producto: Producto){
+  let json = JSON.stringify(producto); //convertirlo a Json
+  let params = 'json='+json;
+  let headers = new Headers({'Content-Type':'application/x-www-form-urlencoded'});
+
+  return this._http.post(this.url+'update/'+id, params, {headers: headers})
+                        .map(res => res.json());
+}
+
+----------------------------Borrar ----------------------------------------
+
+En src/app/services/producto.service.ts agregamos:
+
+deleteProducto(id){
+    return this._http.get(this.url+'delete-producto/'+id)
+                     .map(res => res.json());
+}
+
+En src/app/components/productos.component.ts agregamos:
+
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ProductoService } from '../services/producto.service';
+import { Producto } from '../models/producto';
+
+@Component({
+  selector: 'productos',
+  templateUrl: '../views/productos.html',
+  providers: [ProductoService]
+})
+
+export class ProductosComponent{
+  public titulo:string;
+  public productos: Producto[];
+  public confirmado;  //<----------------------------
+
+  constructor(
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _productoService: ProductoService
+  ){
+    this.titulo = "Listado de productos";
+    this.confirmado = null;  //<------------------------
+  }
+
+  ngOnInit(){
+    console.log('productos.ts cargado');
+   this.getProducto();  //<---------------------Se sustituye
+  }
+
+  getProducto(){ //<-----------------------
+    this._productoService.getProductos().subscribe(
+      result => {
+        if(result.code != 200){
+          console.log(result);
+        }else{
+          this.productos = result.data;
+        }
+      },
+      error => {
+        console.log(<any>error);
+      }
+    );
+  }
+
+borrarConfirm(id){  //<---------------
+  this.confirmado = id;
+}
+
+CancelarConfirm(){ //<------------------------
+  this.confirmado = null;
+}
+
+  onDeleteProducto(id){ //<----------------------
+    this._productoService.deleteProducto(id).subscribe(
+      response => {
+        if(response.code == 200){
+          this.getProducto();
+        }else{
+          alert('Error al borrar producto!!');
+        }
+      },
+      error => {
+        console.log(<any>error);
+      }
+    );
+  }
+}
+
+En src/app/views/productos.html cambiamos:
+
+<div class="caption">
+  <h3>{{producto.nombre}}</h3>
+  <p>{{producto.precio}}</p>
+  <div class="botones" *ngIf="confirmado != producto.id">  <!--  <----------------   -->
+    <a [routerLink]="['/producto', producto.id]" class="btn btn-secondary">Ver</a>
+    <a [routerLink]="['/editar-producto', producto.id]" class="btn btn-warning">Editar</a>
+    <a (click)="borrarConfirm(producto.id)" class="btn btn-danger">Borrar</a>
+  </div>
+    <div class="seguro" *ngIf="confirmado == producto.id">   <!--  <---------------- -->
+      <p>¿Estas seguro de querer borrar este producto?</p>
+      <a (click)="onDeleteProducto(producto.id)" class="btn btn-danger">Eliminar</a>
+      <a (click)="CancelarConfirm()" class="btn btn-warning">Cancelar</a>
+    </div>
+</div>
